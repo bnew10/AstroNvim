@@ -65,7 +65,12 @@ return {
         -- setting a mapping to false will disable it
         -- ["<C-S>"] = false,
 
+        -- whitespace
         ["<Leader>r"] = { function() require("whitespace-nvim").trim() end, desc = "Remove trailing whitespace" },
+
+        -- quit windows
+
+        -- avante
       },
     },
   },
