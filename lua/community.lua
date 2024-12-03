@@ -8,7 +8,11 @@ return {
   { import = "astrocommunity.pack.lua" },
   { import = "astrocommunity.pack.bash" },
   { import = "astrocommunity.pack.java" },
+  { import = "astrocommunity.pack.typescript" },
   { import = "astrocommunity.motion.leap-nvim" },
+  { import = "astrocommunity.utility.lua-json5" },
   { import = "astrocommunity.motion.nvim-surround" },
+  { import = "astrocommunity.completion.avante-nvim" },
+  { import = "astrocommunity.markdown-and-latex.render-markdown-nvim" },
   -- import/override with your plugins folder
 }
