@@ -19,6 +19,9 @@ require("lazy").setup({
   ui = { backdrop = 100 },
   performance = {
     rtp = {
+      --  "reset the runtime path to $VIMRUNTIME and your config directory" https://lazy.folke.io/configuration
+      --  (i.e., removes ghostty nvim ft files)
+      reset = false,
       -- disable some rtp plugins, add more to your liking
       disabled_plugins = {
         "gzip",
