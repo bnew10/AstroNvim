@@ -45,6 +45,9 @@ return {
     ---@diagnostic disable: missing-fields
     config = {
       -- clangd = { capabilities = { offsetEncoding = "utf-8" } },
+      twiggy_language_server = {
+        filetypes = { "twig", "smarty" },
+      },
     },
     -- customize how language servers are attached
     handlers = {
