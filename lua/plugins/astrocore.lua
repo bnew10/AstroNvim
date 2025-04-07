@@ -1,76 +1,112 @@
 -- AstroCore provides a central place to modify mappings, vim options, autocommands, and more!
 -- Configuration documentation can be found with `:h astrocore`
--- NOTE: We highly recommend setting up the Lua Language Server (`:LspInstall lua_ls`)
---       as this provides autocomplete and documentation while editing
 
 ---@type LazySpec
 return {
   "AstroNvim/astrocore",
   ---@type AstroCoreOpts
   opts = {
-    -- Configure core features of AstroNvim
-    features = {
-      large_buf = { size = 1024 * 256, lines = 10000 }, -- set global limits for large files for disabling features like treesitter
-      autopairs = true, -- enable autopairs at start
-      cmp = true, -- enable completion at start
-      diagnostics_mode = 3, -- diagnostic mode on start (0 = off, 1 = no signs/virtual text, 2 = no virtual text, 3 = on)
-      highlighturl = true, -- highlight URLs at start
-      notifications = true, -- enable notifications at start
+    filetypes = {
+      extension = {
+        gitconfig = "gitconfig",
+      },
     },
-    -- Diagnostics configuration (for vim.diagnostics.config({...})) when diagnostics are on
-    diagnostics = {
-      virtual_text = true,
-      underline = true,
-    },
-    -- vim options can be configured here
     options = {
-      opt = { -- vim.opt.<key>
-        relativenumber = true, -- sets vim.opt.relativenumber
-        number = true, -- sets vim.opt.number
-        spell = false, -- sets vim.opt.spell
-        signcolumn = "yes", -- sets vim.opt.signcolumn to yes
-        wrap = false, -- sets vim.opt.wrap
-      },
-      g = { -- vim.g.<key>
-        -- configure global vim variables (vim.g)
-        -- NOTE: `mapleader` and `maplocalleader` must be set in the AstroNvim opts or before `lazy.setup`
-        -- This can be found in the `lua/lazy_setup.lua` file
+      opt = {
+        iskeyword = vim.list_extend(vim.opt.iskeyword:get(), { "-" }),
+        completeopt = { "menu", "menuone", "noselect", "fuzzy" },
       },
     },
-    -- Mappings can be configured through AstroCore as well.
-    -- NOTE: keycodes follow the casing in the vimdocs. For example, `<Leader>` must be capitalized
     mappings = {
-      -- first key is the mode
       n = {
-        -- second key is the lefthand side of the map
-
-        -- navigate buffer tabs
-        ["]b"] = { function() require("astrocore.buffer").nav(vim.v.count1) end, desc = "Next buffer" },
-        ["[b"] = { function() require("astrocore.buffer").nav(-vim.v.count1) end, desc = "Previous buffer" },
-
-        -- mappings seen under group name "Buffer"
-        ["<Leader>bd"] = {
-          function()
-            require("astroui.status.heirline").buffer_picker(
-              function(bufnr) require("astrocore.buffer").close(bufnr) end
-            )
-          end,
-          desc = "Close buffer from tabline",
-        },
-
-        -- tables with just a `desc` key will be registered with which-key if it's installed
-        -- this is useful for naming menus
-        -- ["<Leader>b"] = { desc = "Buffers" },
-
-        -- setting a mapping to false will disable it
-        -- ["<C-S>"] = false,
-
         -- whitespace
         ["<Leader>r"] = { function() require("whitespace-nvim").trim() end, desc = "Remove trailing whitespace" },
 
-        -- quit windows
+        -- dap
+        ["<Leader>df"] = { function() require("dap").focus_frame() end, desc = "Focus current execution point" },
+        ["<Leader>dl"] = {
+          function()
+            require("dap").list_breakpoints()
+            local qflist_size = vim.fn.getqflist({ size = 0 }).size
+            if qflist_size == 0 then
+              vim.notify("No breakpoints set!", vim.log.levels.INFO)
+            else
+              vim.cmd "botright copen"
+            end
+          end,
+          desc = "List breakpoints quickfix",
+        },
+        ["<Leader>dv"] = {
+          function()
+            local widgets = require "dap.ui.widgets"
+            widgets.centered_float(widgets.scopes)
+          end,
+          desc = "Inspect variables in popup",
+        },
 
-        -- avante
+        ["<Leader>bn"] = {
+          function() vim.notify((vim.api.nvim_buf_get_name(0):gsub(tostring(os.getenv "HOME"), "~"))) end,
+          desc = "Print buffer abs path",
+        },
+
+        ["<Leader>xc"] = { "<cmd>cclose<cr>", desc = "Close quickfix window" },
+
+        ["<Leader>E"] = {
+          function()
+            if vim.bo.filetype == "neo-tree" then
+              vim.cmd.wincmd "p"
+            else
+              vim.cmd.Neotree "focus"
+            end
+          end,
+          desc = "Toggle Explorer Focus",
+        },
+
+        ["<Leader>W"] = { "<cmd>wall<cr>", desc = "Save all" },
+
+        ["<Leader>z"] = { "<cmd>tab split<cr>", desc = "Open in new tab" },
+
+        ["g]"] = { "<C-]>", desc = "Go to tag" },
+
+        ["<Leader>bh"] = {
+          function() require("astrocore.buffer").close_left() end,
+          desc = "Close all buffers to the left",
+        },
+        ["<Leader>bl"] = {
+          function() require("astrocore.buffer").close_right() end,
+          desc = "Close all buffers to the right",
+        },
+
+        ["<Leader>c"] = { function() require("astrocore.buffer").close() end, desc = "Delete buffer" },
+        ["<Leader>C"] = { "<cmd>tabc<cr>", desc = "Close tab" },
+
+        ["<Leader>o"] = { "<cmd>only<cr>", desc = "Close all other windows" },
+        ["<Leader>O"] = { "<cmd>tabo<cr>", desc = "Close all other tabs" },
+
+        ["grr"] = {
+          function()
+            vim.lsp.buf.references({ includeDeclaration = false }, {
+              on_list = function(args)
+                vim.fn.setqflist({}, " ", args)
+                local num_refs = vim.fn.len(args.items)
+                if num_refs >= 2 then vim.cmd "botright copen" end
+                vim.cmd "silent cfirst"
+              end,
+            })
+          end,
+          desc = "Search references",
+        },
+
+        -- run :=require("lazy.core.config").plugins["plugin-name"] to get final merged plugin config table
+      },
+      c = {
+        ["<C-a>"] = { "<Home>", desc = "Move cursor to beginning of line" },
+        ["<C-e>"] = { "<End>", desc = "Move cursor to end of line" },
+        ["<C-b>"] = { "<Left>", desc = "Move cursor one char back" },
+        ["<C-f>"] = { "<Right>", desc = "Move cursor one char forward" },
+        ["<M-b>"] = { "<S-Left>", desc = "Move cursor one word back" },
+        ["<M-f>"] = { "<S-Right>", desc = "Move cursor one word forward" },
+        ["<C-d>"] = { "<Del>", desc = "Delete one char forward" },
       },
     },
   },

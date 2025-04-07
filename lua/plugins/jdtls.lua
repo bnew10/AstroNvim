@@ -38,6 +38,10 @@ return {
                 path = "/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home",
                 default = true,
               },
+              {
+                name = "JavaSE-23",
+                path = "/Library/Java/JavaVirtualMachines/openjdk.jdk/Contents/Home",
+              },
             },
           },
         },

@@ -1,6 +1,7 @@
 ---@type LazySpec
 return {
   "mikavilpas/yazi.nvim",
+  ---@module "yazi"
   dependencies = {
     {
       "AstroNvim/astrocore",
