@@ -43,6 +43,8 @@ return {
           function() require("snacks").picker.grep_buffers { args = { "--hidden", "--no-ignore" }, need_search = true } end,
           desc = "Find words in open files",
         }
+        maps.n["<Leader>ff"] =
+          { function() require("snacks").picker.files { hidden = true, cmd = "rg" } end, desc = "Find files" }
       end,
     },
   },
