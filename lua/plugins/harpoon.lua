@@ -9,15 +9,12 @@ return {
       "AstroNvim/astrocore",
       opts = function(_, opts)
         local harpoon = require "harpoon"
-        local maps = opts.mappings
+        local maps = assert(opts.mappings)
         local prefix = "<Leader>h"
 
         maps.n[prefix] = { desc = require("astroui").get_icon("Harpoon", 1, true) .. "Harpoon" }
 
         maps.n[prefix .. "a"] = { function() harpoon:list():add() end, desc = "Add file" }
-
-        maps.n["<C-p>"] = { function() harpoon:list():prev() end, desc = "Goto previous mark" }
-        maps.n["<C-n>"] = { function() harpoon:list():next() end, desc = "Goto next mark" }
 
         maps.n[prefix .. "e"] =
           { function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, desc = "Toggle quick menu" }
@@ -32,14 +29,6 @@ return {
         maps.n[prefix .. "8"] = { function() harpoon:list():select(8) end, desc = "Select mark 8" }
         maps.n[prefix .. "9"] = { function() harpoon:list():select(9) end, desc = "Select mark 9" }
       end,
-    },
-  },
-  specs = {
-    {
-      "catppuccin",
-      ---@module "catppuccin"
-      ---@type CatppuccinOptions
-      opts = { integrations = { harpoon = true } },
     },
   },
   config = function()

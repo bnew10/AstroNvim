@@ -3,7 +3,7 @@ return {
   "mfussenegger/nvim-jdtls",
   opts = function(_, opts)
     local util = require "lspconfig.util"
-    local cmd = opts.cmd
+    local cmd = assert(opts.cmd)
     local root_files = {
       -- Multi-module projects
       { ".git", "build.gradle", "build.gradle.kts" },

@@ -14,18 +14,46 @@ return {
         },
       },
     },
-    -- autocmds = {
-    --   lsp_references = {
-    --     cond = "textDocument/references",
-    --     {
-    --       event = "LspRequest",
-    --       desc = "TEST",
-    --       callback = function(args)
-    --         local request = args.data.request
-    --         if request.method == "textDocument/references" then vim.print(request) end
-    --       end,
-    --     },
-    --   },
-    -- },
+    mappings = {
+      n = {
+        grr = {
+          function()
+            require("snacks").picker.lsp_references {
+              include_declaration = false,
+              include_current = true,
+            }
+          end,
+          desc = "Search references",
+          cond = "textDocument/references",
+        },
+        gri = {
+          function()
+            require("snacks").picker.lsp_implementations {
+              include_current = true,
+            }
+          end,
+          desc = "Search implementations",
+          cond = "textDocument/implementation",
+        },
+        gd = {
+          function()
+            require("snacks").picker.lsp_definitions {
+              include_current = true,
+            }
+          end,
+          desc = "Search definitions",
+          cond = "textDocument/definition",
+        },
+        gD = {
+          function()
+            require("snacks").picker.lsp_declarations {
+              include_current = true,
+            }
+          end,
+          desc = "Search declarations",
+          cond = "textDocument/declaration",
+        },
+      },
+    },
   },
 }

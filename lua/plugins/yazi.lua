@@ -3,6 +3,7 @@ return {
   "mikavilpas/yazi.nvim",
   ---@module "yazi"
   dependencies = {
+    "folke/snacks.nvim",
     {
       "AstroNvim/astrocore",
       opts = function(_, opts)
@@ -19,11 +20,6 @@ return {
       show_help = "<f1>",
       cycle_open_buffers = "<a-tab>",
       grep_in_directory = false,
-    },
-    -- yazi_floating_window_border = "none",
-    future_features = {
-      ya_emit_reveal = true,
-      ya_emit_open = true,
     },
   },
 }
