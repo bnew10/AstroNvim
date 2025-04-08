@@ -6,6 +6,9 @@ return {
   "AstroNvim/astrocore",
   ---@type AstroCoreOpts
   opts = {
+    features = {
+      diagnostics = true,
+    },
     filetypes = {
       extension = {
         gitconfig = "gitconfig",
