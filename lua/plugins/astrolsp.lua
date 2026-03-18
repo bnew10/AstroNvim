@@ -6,13 +6,26 @@ return {
   "AstroNvim/astrolsp",
   ---@type AstroLSPOpts
   opts = {
+    native_lsp_config = true,
+    servers = { "sourcekit" },
     formatting = {
       format_on_save = {
         ignore_filetypes = {
           "java",
+          "javascript",
           "xml",
+          "css",
         },
       },
+    },
+    ---@diagnostic disable: missing-fields
+    config = {
+      taplo = {
+        root_markers = { { ".taplo.toml", "taplo.toml" }, ".git" },
+      },
+    },
+    handlers = {
+      eslint = false,
     },
     mappings = {
       n = {
@@ -21,6 +34,10 @@ return {
             require("snacks").picker.lsp_references {
               include_declaration = false,
               include_current = true,
+              focus = "list",
+              layout = {
+                preset = "ivy",
+              },
             }
           end,
           desc = "Search references",
@@ -30,6 +47,10 @@ return {
           function()
             require("snacks").picker.lsp_implementations {
               include_current = true,
+              focus = "list",
+              layout = {
+                preset = "ivy",
+              },
             }
           end,
           desc = "Search implementations",
@@ -39,6 +60,10 @@ return {
           function()
             require("snacks").picker.lsp_definitions {
               include_current = true,
+              focus = "list",
+              layout = {
+                preset = "ivy",
+              },
             }
           end,
           desc = "Search definitions",
@@ -48,6 +73,10 @@ return {
           function()
             require("snacks").picker.lsp_declarations {
               include_current = true,
+              focus = "list",
+              layout = {
+                preset = "ivy",
+              },
             }
           end,
           desc = "Search declarations",
