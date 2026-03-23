@@ -48,8 +48,8 @@ return {
         "williamboman/mason-lspconfig.nvim",
         optional = true,
         opts = function(_, opts)
-          opts.ensure_installed =
-            require("astrocore").list_insert_unique(opts.ensure_installed, { "jdtls", "vscode-spring-boot-tools" })
+          opts.automatic_enable = opts.automatic_enable or {}
+          opts.automatic_enable.exclude = { "jdtls" }
         end,
       },
       {
@@ -71,5 +71,13 @@ return {
         end,
       },
     },
+    config = function(_, _)
+      local jdtls_setup = require "plugins.config.jdtls_config"
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "java",
+        callback = function() jdtls_setup() end,
+      })
+      jdtls_setup()
+    end,
   },
 }
