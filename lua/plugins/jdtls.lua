@@ -36,13 +36,13 @@ return {
       },
       { import = "astrocommunity.pack.xml" },
       {
-        "nvim-treesitter/nvim-treesitter",
+        "AstroNvim/astrocore",
         optional = true,
-        opts = function(_, opts)
-          if opts.ensure_installed ~= "all" then
-            opts.ensure_installed = require("astrocore").list_insert_unique(opts.ensure_installed, { "java" })
-          end
-        end,
+        opts = {
+          treesitter = {
+            ensure_installed = { "java" },
+          },
+        },
       },
       {
         "williamboman/mason-lspconfig.nvim",
