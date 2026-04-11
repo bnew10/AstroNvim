@@ -1,8 +1,6 @@
 ---@type LazySpec
 return {
   "folke/snacks.nvim",
-  dev = true,
-  branch = "jump_center_field",
   opts = function(_, opts)
     local get_icon = require("astroui").get_icon
 
@@ -18,7 +16,6 @@ return {
     }
 
     opts.picker = {
-      jump = { post_cmd = "norm! zv" },
       win = {
         input = {
           keys = {
@@ -82,17 +79,17 @@ return {
         --   desc = "Resume previous search",
         -- }
 
-        maps.n["<Leader>ls"] = {
-          function()
-            local aerial_avail, aerial = pcall(require, "aerial")
-            if aerial_avail and aerial.snacks_picker then
-              aerial.snacks_picker { jump = { post_cmd = "norm! zt" } }
-            else
-              require("snacks").picker.lsp_symbols()
-            end
-          end,
-          desc = "Search symbols",
-        }
+        -- maps.n["<Leader>ls"] = {
+        --   function()
+        --     local aerial_avail, aerial = pcall(require, "aerial")
+        --     if aerial_avail and aerial.snacks_picker then
+        --       aerial.snacks_picker { jump = { post_cmd = "norm! zt" } }
+        --     else
+        --       require("snacks").picker.lsp_symbols()
+        --     end
+        --   end,
+        --   desc = "Search symbols",
+        -- }
       end,
     },
   },
