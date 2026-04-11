@@ -1,8 +1,6 @@
 return function()
   local buf_name = vim.api.nvim_buf_get_name(0)
   local root_dir = vim.fs.root(0, { ".git", "mvnw", "pom.xml" }) or vim.fs.dirname(buf_name)
-  local project_name = vim.fs.basename(vim.fs.dirname(buf_name) == root_dir and buf_name or root_dir)
-  local workspace_dir = vim.fn.stdpath "data" .. "/site/java/workspace-root/" .. project_name
 
   -- Build bundles list for debug adapter and test runner
   local bundles = {
@@ -13,15 +11,9 @@ return function()
   local config = {
     name = "jdtls",
 
-    cmd = {
-      vim.fn.expand "$MASON/bin/jdtls",
-      "--java-executable",
-      "/Library/Java/JavaVirtualMachines/openjdk.jdk/Contents/Home/bin/java",
-      "-configuration",
-      vim.fn.expand "$MASON/share/jdtls/config/arm",
-      "-data",
-      workspace_dir,
-    },
+    -- Startup args (JDK, workspace, config dir) handled by ~/.local/bin/jdtls wrapper
+    -- Must use absolute path because Mason prepends its bin/ to PATH inside Neovim
+    cmd = { vim.fn.expand "$HOME/.local/bin/jdtls" },
 
     root_dir = root_dir,
 
