@@ -8,15 +8,9 @@ return {
   opts = {
     native_lsp_config = true,
     servers = { "sourcekit" },
+    -- format-on-save is owned by conform.nvim (see lua/plugins/conform.lua)
     formatting = {
-      format_on_save = {
-        ignore_filetypes = {
-          "java",
-          "javascript",
-          "xml",
-          "css",
-        },
-      },
+      format_on_save = false,
     },
     ---@diagnostic disable: missing-fields
     config = {

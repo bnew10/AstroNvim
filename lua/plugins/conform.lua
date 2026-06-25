@@ -19,8 +19,13 @@ return {
       lsp_format = "prefer",
       stop_after_first = true,
     },
-    -- Set up format-on-save
-    format_on_save = nil,
+    -- Format on save, except for these filetypes. lsp_format = "fallback" lets
+    -- filetypes without a conform formatter (e.g. swift) still format via LSP.
+    format_on_save = function(bufnr)
+      local ignore = { java = true, javascript = true, xml = true, css = true }
+      if ignore[vim.bo[bufnr].filetype] then return end
+      return { lsp_format = "fallback" }
+    end,
     -- Customize formatters
     formatters = {
       shfmt = {
