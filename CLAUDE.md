@@ -11,6 +11,7 @@ This is an AstroNvim v6 user configuration on macOS (Apple Silicon). It uses laz
 - **Lua linting:** `selene` (configured in `selene.toml`, std = neovim)
 - **Lua formatting:** `stylua` (via conform.nvim). Run `:ConformInfo` to check formatter status
 - Format-on-save is enabled globally except for java, javascript, xml, and css filetypes
+- CLI checks (before committing): `selene lua/` (lint), `stylua --check lua/` (format check)
 
 ## Architecture
 
