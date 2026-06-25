@@ -13,6 +13,7 @@ return {
       python = { "isort", "black" },
       javascript = { "prettierd" },
       yaml = { "prettierd" },
+      markdown = { "prettierd" },
     },
     -- Set default options
     default_format_opts = {
@@ -30,6 +31,15 @@ return {
     formatters = {
       shfmt = {
         append_args = { "-i", "2" },
+      },
+      -- Hard-wrap markdown prose at column 190. prose-wrap=always enables
+      -- wrapping (prettier's default "preserve" inserts none); scoped to
+      -- markdown so js/yaml keep prettier's default print width.
+      prettierd = {
+        prepend_args = function(_, ctx)
+          if vim.bo[ctx.buf].filetype == "markdown" then return { "--print-width=190", "--prose-wrap=always" } end
+          return {}
+        end,
       },
     },
   },
