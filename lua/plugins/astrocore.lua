@@ -14,6 +14,9 @@ return {
         gitconfig = "gitconfig",
       },
     },
+    treesitter = {
+      ensure_installed = { "regex", "css", "latex", "scss" },
+    },
     options = {
       opt = {
         iskeyword = vim.list_extend(vim.opt.iskeyword:get(), { "-" }),
