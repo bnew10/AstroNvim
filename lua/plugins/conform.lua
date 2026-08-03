@@ -47,4 +47,15 @@ return {
     -- If you want the formatexpr, here is the place to set it
     vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
   end,
+  specs = {
+    {
+      "WhoIsSethDaniel/mason-tool-installer.nvim",
+      optional = true,
+      -- Only prettierd: stylua, isort, black, and shfmt are already ensured by
+      -- the astrocommunity lua/python/bash packs imported in lua/community.lua.
+      opts = function(_, opts)
+        opts.ensure_installed = require("astrocore").list_insert_unique(opts.ensure_installed, { "prettierd" })
+      end,
+    },
+  },
 }
