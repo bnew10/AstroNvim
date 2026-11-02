@@ -23,6 +23,7 @@ return {
     -- Format on save, except for these filetypes. lsp_format = "fallback" lets
     -- filetypes without a conform formatter (e.g. swift) still format via LSP.
     format_on_save = function(bufnr)
+      if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then return end
       local ignore = { java = true, javascript = true, xml = true, css = true }
       if ignore[vim.bo[bufnr].filetype] then return end
       return { lsp_format = "fallback" }
@@ -48,6 +49,29 @@ return {
     vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
   end,
   specs = {
+    -- Replaces AstroLSP's LSP-gated <Leader>uf/uF toggles, which conform's format_on_save never reads.
+    {
+      "AstroNvim/astrocore",
+      opts = function(_, opts)
+        local maps = assert(opts.mappings)
+
+        maps.n["<Leader>uf"] = {
+          function()
+            vim.b.disable_autoformat = not vim.b.disable_autoformat
+            vim.notify("Buffer autoformatting " .. (vim.b.disable_autoformat and "off" or "on"))
+          end,
+          desc = "Toggle autoformatting (buffer)",
+        }
+
+        maps.n["<Leader>uF"] = {
+          function()
+            vim.g.disable_autoformat = not vim.g.disable_autoformat
+            vim.notify("Global autoformatting " .. (vim.g.disable_autoformat and "off" or "on"))
+          end,
+          desc = "Toggle autoformatting (global)",
+        }
+      end,
+    },
     {
       "WhoIsSethDaniel/mason-tool-installer.nvim",
       optional = true,

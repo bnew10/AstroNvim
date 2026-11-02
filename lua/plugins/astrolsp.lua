@@ -36,6 +36,9 @@ return {
     },
     mappings = {
       n = {
+        -- conform owns format-on-save; the global toggles live in lua/plugins/conform.lua
+        ["<Leader>uf"] = false,
+        ["<Leader>uF"] = false,
         grr = {
           function()
             require("snacks").picker.lsp_references {
