@@ -18,6 +18,9 @@ return {
       ensure_installed = { "regex", "css", "latex", "scss" },
     },
     options = {
+      g = {
+        clipboard = "osc52",
+      },
       opt = {
         iskeyword = vim.list_extend(vim.opt.iskeyword:get(), { "-" }),
         completeopt = { "menu", "menuone", "noselect", "fuzzy" },
