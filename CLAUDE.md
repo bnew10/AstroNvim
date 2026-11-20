@@ -42,6 +42,17 @@ Java LSP is handled entirely by nvim-jdtls, not mason-lspconfig. The active conf
 - Both finders are **memoized module-locally** (`resolve_jdks`): the module body runs per `FileType java` buffer, so an unmemoized probe would fork `java_home` for every Java file opened and re-fire the WARN each time. The WARN therefore lands at most once per session. `tests/jdtls_probes_test.lua` covers all of this.
 - **JavaSE-21**: keg-only `openjdk@21` under `$HOMEBREW_PREFIX`, `/opt/homebrew`, `/usr/local`, `/home/linuxbrew/.linuxbrew` — macOS layout (`libexec/openjdk.jdk/Contents/Home`) then Linux (`libexec`). `HOMEBREW_PREFIX` is only exported by interactive shells, so it is absent for GUI/agent-spawned Neovim and must be treated as optional.
 
+### smart-splits and Rex
+
+`lua/plugins/smart-splits.lua` runs smart-splits **v3** from `smart-splits-nvim/smart-splits.nvim`. AstroNvim ships its own spec for this plugin under the old `mrjones2014/` name and pins it to `^2` in its lazy snapshot. The user spec has the same plugin name and loads last, so its URL and `version = "^3.0.0"` win. v3 has no built-in multiplexer adapters. Each one is a separate plugin named in `mux.backend`.
+
+- **Backend:** `bnew10/backend-rex`, module `smart-splits-backend-rex`. At Neovim's edge, `<C-hjkl>` focus the neighbouring Rex pane and `<M-hjkl>` resize it, with one `rex do` process per keypress.
+- **`dev` is computed, never hardcoded.** `lazy_setup.lua` sets `dev.fallback = false`, so a plain `dev = true` breaks every machine without a checkout at `~/repos/backend-rex`. Those machines must clone the backend from GitHub.
+- **`mux.warn_if_unusable = false`.** Core warns at setup when a backend is configured but none detects, and this config also runs outside Rex.
+- **`move.at_edge = "stop"`.** No wrap at a Rex edge, to match the Rex pane keys. It also stops wrapping among Neovim's own windows.
+- **`<C-\>` runs `wincmd p`.** v3 removed `move_cursor_previous`.
+- **The Rex half lives in machine-config**, not here. Rex has to pass `ctrl` and `alt` + `hjkl` through to Neovim, and those bindings are in `dotfiles/dot_config/rex/keys.lua` there. `:checkhealth smart-splits` makes one real round trip to Rex and reports why it failed.
+
 ### Picker
 
 Snacks.nvim is the picker (not Telescope). LSP navigation (references, definitions, implementations, declarations) uses `snacks.picker.lsp_*` with ivy layout. File/grep pickers include `--hidden` and `--no-ignore-vcs` flags by default.
