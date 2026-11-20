@@ -1,7 +1,22 @@
 ---@type LazySpec
 return {
-  "mrjones2014/smart-splits.nvim",
+  -- Same name as AstroNvim's spec, so this merges into it and overrides its snapshot's `^2` pin.
+  "smart-splits-nvim/smart-splits.nvim",
+  version = "^3.0.0",
   lazy = true,
+  dependencies = {
+    {
+      "bnew10/backend-rex",
+      -- Load the checkout at lazy's dev path when this machine has one, else clone from GitHub
+      -- (lazy_setup.lua sets dev.fallback = false, so dev must be false where the checkout is missing).
+      dev = vim.fn.isdirectory(vim.fn.expand "~/repos/backend-rex") == 1,
+    },
+  },
+  opts = {
+    -- No warning where the backend detects no Rex pane: this config also runs outside Rex.
+    mux = { backend = "smart-splits-backend-rex", warn_if_unusable = false },
+    move = { at_edge = "stop" }, -- no wrap at a Rex edge, as ~/.config/rex/keys.lua chooses
+  },
   specs = {
     {
       "AstroNvim/astrocore",
@@ -11,8 +26,8 @@ return {
         maps.n["<C-J>"] = { function() require("smart-splits").move_cursor_down() end, desc = "Move to below split" }
         maps.n["<C-K>"] = { function() require("smart-splits").move_cursor_up() end, desc = "Move to above split" }
         maps.n["<C-L>"] = { function() require("smart-splits").move_cursor_right() end, desc = "Move to right split" }
-        maps.n["<C-\\>"] =
-          { function() require("smart-splits").move_cursor_previous() end, desc = "Move to last split" }
+        -- v3 dropped move_cursor_previous; it only ever went back to the previous Neovim window
+        maps.n["<C-\\>"] = { "<Cmd>silent! wincmd p<CR>", desc = "Move to last split" }
 
         maps.n["<M-h>"] = { function() require("smart-splits").resize_left() end, desc = "Resize split left" }
         maps.n["<M-j>"] = { function() require("smart-splits").resize_down() end, desc = "Resize split down" }
